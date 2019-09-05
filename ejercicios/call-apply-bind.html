@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Call, apply, bind</title>
+</head>
+
+<body>
+  <a href="/ejercicios/">Vuelve al indice</a>
+  <p><em>Abre la consola</em></p>
+  <ul>
+    <li><button class="call-to-action">Aprender</button></li>
+    <li><button class="call-to-action">Aprender Más</button></li>
+    <li><button class="call-to-action">Nunca parar de aprender!</button></li>
+  </ul>
+  <script>
+    //Establece 'this' usando 'call'
+    function saludar() {
+      console.log(`Hola. Soy ${this.name} ${this.apellido}`)
+    }
+    const sebastian = {
+      name: 'Sebastián',
+      apellido: 'García'
+    }
+    saludar.call(sebastian);
+
+    //Establece 'this' usando 'call' y pasar argumentos a la función 
+    function caminar(metros, direccion) {
+      console.log(`${this.name} camina ${metros} metros hacia ${direccion}.`)
+    }
+    caminar.call(sebastian, 100, 'oeste');
+
+    //Establece 'this' usando 'apply' y pasar argumentos a la función
+    const valores = [500, 'sur'];
+    caminar.apply(sebastian, valores)
+
+    //Establecer 'this' en una nueva función usando 'bind'
+    const daniel = { name: "Daniel", apellido: "Sánchez" }
+    const danielSaluda = saludar.bind(daniel);
+    danielSaluda();
+
+    const danielCamina = caminar.bind(daniel, 2000);//cutting, guardamos parcialmente algunos argumentos 
+    danielCamina("norte");// y luego llenamos los demas
+
+    //cuando es útil usar uno de estos métodos
+    const buttons = document.getElementsByClassName('call-to-action');//retorna un node list
+    // buttons.forEach(button => {
+    //   button.onclick = () => alert("Nunca pares de aprender!");
+    // })
+
+    //NodeList
+    Array.prototype.forEach.call(buttons, button => {
+      button.onclick = () => alert("Nunca pares de aprender!");
+    })
+  </script>
+
+</body>
+
+</html>

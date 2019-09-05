@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Abort Fetch</title>
+</head>
+
+<body>
+  <a href="/ejercicios/">Vuelve al indice</a>
+  <p><em>Abre la consola</em></p>
+
+  <img 
+    height="400" 
+    id="huge-image"
+  />
+
+  <button class="" id="load">Load HUGE Image</button>
+  <button class="" id="stop">Stop Fetching</button>
+
+  <script>
+    const url = 'https://images.pexels.com/photos/974470/nature-stars-milky-way-galaxy-974470.jpeg?q=100'
+    const img = document.getElementById('huge-image')
+    const loadButton = document.getElementById('load');
+    const stopButton = document.getElementById('stop');
+    let controller = new AbortController();
+    
+    function startLoading() {
+      loadButton.disabled = true;
+      loadButton.innerText = 'Loading...';
+      stopButton.disabled = false;
+    }
+
+    function stopLoading() {
+      loadButton.disabled = false;
+      loadButton.innerText = 'Load HUGE Image';
+      stopButton.disabled = true;
+    }
+    
+    loadButton.onclick = async function () {
+      startLoading();
+
+      controller = new AbortController();
+
+      try {
+        const response = await fetch(url, {
+          signal: controller.signal //Esta es la señal que el objeto de configuraciones del fetch necesita
+        });
+        const blob = await response.blob(); //es el binario de la petición, imagen pero en forma binaria
+        const imgURL = URL.createObjectURL(blob)
+        img.src = imgURL;
+      } catch (err) {
+        console.log(err)
+      }
+
+      stopLoading();
+    }
+    stopButton.onclick = async function () {
+      controller.abort(); 
+      stopLoading();
+    }
+  </script>
+
+</body>
+
+</html>
